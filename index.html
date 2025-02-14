@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NgHuy - Profile</title>
+    <meta name="description" content="NgHuy - Web Developer Portfolio | Creative & Professional Web Solutions">
+    <meta name="keywords" content="web developer, portfolio, NgHuy, frontend, developer">
+    <meta name="author" content="Quoc Duy">
+    
+    <meta property="og:title" content="NgHuy - Web Developer">
+    <meta property="og:description" content="Creative & Professional Web Solutions">
+    <meta property="og:image" content="https://files.catbox.moe/hz1ltt.jpg">
+    <meta property="og:url" content="https://quocduydev.site">
+    
+    <meta name="theme-color" content="#2ecc71">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link href='https://i.imgur.com/QARN7st.png' rel='icon' type='image/x-icon'/>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --text: #2c3e50;
+        }
+        
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            overflow: hidden;
+        }
+        
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loader-content {
+            width: 300px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #2ecc71;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Thêm style cho verified badge */
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: #2196f3;
+            border-radius: 50%;
+            margin-left: 5px;
+            position: relative;
+            top: -2px;
+        }
+
+        .verified-badge i {
+            color: white;
+            font-size: 10px;
+        }
+
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .music-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Style cho hoa đào */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .sakura {
+            position: absolute;
+            background: #ffd7e6;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translate(0, -10px) rotate(0deg);
+            }
+            100% {
+                transform: translate(100px, 100vh) rotate(360deg);
+            }
+        }
+
+        .banner {
+            height: 140px;
+            background: linear-gradient(45deg, #2ecc71, #3498db);
+            position: relative;
+            z-index: 1;
+        }
+
+        #audioVisualizer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .music-bars {
+            display: inline-flex;
+            gap: 2px;
+            height: 15px;
+            margin-left: 10px;
+        }
+
+        .music-bars .bar {
+            width: 2px;
+            background: var(--primary);
+            border-radius: 1px;
+            animation: musicBar 1s ease-in-out infinite;
+        }
+
+        .music-bars .bar:nth-child(1) { animation-delay: 0.0s; height: 8px; }
+        .music-bars .bar:nth-child(2) { animation-delay: 0.2s; height: 15px; }
+        .music-bars .bar:nth-child(3) { animation-delay: 0.4s; height: 10px; }
+        .music-bars .bar:nth-child(4) { animation-delay: 0.6s; height: 12px; }
+
+        @keyframes musicBar {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.6); }
+        }
+
+        /* Thêm class để control animation */
+        .music-bars.paused .bar {
+            animation-play-state: paused;
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: -60px auto 0;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+            background: white;
+        }
+
+        /* Tooltip cho Social Icons */
+        .social-link {
+            position: relative;
+        }
+
+        .social-link::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            font-size: 12px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .social-link:hover::before {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        /* Ping Indicator Style */
+        .ping-indicator {
+            font-size: 0.8em;
+            margin-left: 5px;
+            background: rgba(46, 204, 113, 0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+            color: #2ecc71;
+        }
+
+        /* Location Style */
+        .location {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 5px 15px;
+            background: rgba(127, 140, 141, 0.1);
+            border-radius: 20px;
+            width: fit-content;
+            margin: 15px auto;
+        }
+
+        .location i {
+            color: #e74c3c;  /* Màu đỏ cho icon location */
+            font-size: 1rem;
+        }
+
+        .location:hover {
+            transform: translateY(-2px);
+            transition: transform 0.3s ease;
+        }
+
+        /* Tech Stack Style */
+        .tech-stack {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .tech-stack i {
+            font-size: 1.5rem;
+            transition: 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Màu cho từng icon */
+        .tech-stack .fa-html5 { color: #e34f26; }
+        .tech-stack .fa-css3-alt { color: #1572b6; }
+        .tech-stack .fa-js { color: #f7df1e; }
+        .tech-stack .fa-react { color: #61dafb; }
+        .tech-stack .fa-php { color: #777bb4; }
+
+        /* Hover effect */
+        .tech-stack i:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Tooltip */
+        .tech-stack i::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            font-size: 12px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .tech-stack i:hover::before {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        /* Bio Style */
+        .bio {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin: 15px 0;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+
+        .bio p {
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .bio p:hover {
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* Playlist Panel */
+        .playlist-panel {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .playlist-panel.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .playlist-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .close-playlist {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .playlist-items {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .playlist-item.playing {
+            background: linear-gradient(45deg, #00a8ff, #4cd137);
+        }
+
+        .song-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .song-name {
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+
+        .artist {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+        }
+
+        .play-btn {
+            color: white;
+            font-size: 1rem;
+        }
+
+        /* Scrollbar style */
+        .playlist-items::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .playlist-items::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .playlist-items::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* Style cho rồng */
+        .dragon-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .dragon {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-image: url('https://files.catbox.moe/dragon.gif'); /* Anh cần thay URL này bằng ảnh rồng */
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: dragonFly 20s infinite linear;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        @keyframes dragonFly {
+            0% {
+                transform: translate(-150px, 100vh) rotate(30deg) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            45% {
+                transform: translate(50vw, 20vh) rotate(-15deg) scale(1);
+            }
+            55% {
+                transform: translate(70vw, 50vh) rotate(15deg) scale(1.2);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(calc(100vw + 150px), 10vh) rotate(-20deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* Thêm các ngôi sao */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+            opacity: 0;
+        }
+
+        /* Animation cho các ngôi sao */
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Shooting stars */
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, #fff, transparent);
+            animation: shooting var(--duration) linear infinite;
+            transform: rotate(var(--rotation));
+            opacity: 0;
+        }
+
+        @keyframes shooting {
+            0% {
+                transform: translateX(-100%) rotate(var(--rotation));
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(200%) rotate(var(--rotation));
+                opacity: 0;
+            }
+        }
+
+        /* Nebula effect */
+        .nebula {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at center,
+                rgba(63, 94, 251, 0.2) 0%,
+                rgba(252, 70, 107, 0.1) 100%
+            );
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Điều chỉnh card để phù hợp với theme vũ trụ */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Style cho text hướng dẫn */
+        .music-hint {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 188, 212, 0.8);
+            animation: glowText 2s ease-in-out infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes glowText {
+            0%, 100% {
+                opacity: 0.7;
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.05);
+            }
+        }
+    </style>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Preload fonts và images -->
+    <link rel="preload" href="https://files.catbox.moe/hz1ltt.jpg" as="image">
+    <link rel="preload" href="https://files.catbox.moe/ye5uwx.mp3" as="audio">
+
+    <!-- Thêm preconnect -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://files.catbox.moe" crossorigin>
+    <link rel="preconnect" href="https://i.imgur.com" crossorigin>
+
+    <!-- Thêm meta tags quan trọng -->
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="revisit-after" content="1 days">
+    <link rel="canonical" href="https://quocduydev.site">
+
+    <!-- Thêm meta tags bảo mật -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    
+    <!-- Cập nhật CSP để cho phép hiệu ứng click -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' https:; 
+        script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; 
+        style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com;
+        img-src 'self' data: https: http:;
+    ">
+</head>
+<body>
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-title">LOADING</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="progress-text">0%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="audio-player">
+        <!-- Background Music -->
+        <audio id="bgMusic" loop>
+            <source src="" type="audio/mpeg">
+        </audio>
+        <button class="music-toggle">
+            <i class="fas fa-music"></i>
+        </button>
+        <div class="music-hint">Nghe Nhạc Bấm Zô Đây</div>
+        
+        <!-- Playlist Panel -->
+        <div class="playlist-panel">
+            <div class="playlist-header">
+                <h3>Playlist</h3>
+                <button class="close-playlist">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="playlist-items">
+                <!-- Bài hát hiện tại -->
+                <div class="playlist-item" data-src="music/music1.mp3",data-src="music/music2.mp3">
+                    <div class="song-info">
+                        <span class="song-name">Nhạc Remix</span>
+                        <span class="artist">Mix giữa các bài hát</span>
+                    </div>
+                    <div class="controls">
+                        <i class="fas fa-play play-btn"></i>
+                        <i class="fas fa-pause pause-btn hidden"></i>
+                    </div>
+                </div>
+
+                <!-- Thêm 4 bài hát mới -->
+                <div class="playlist-item" data-src="music/music3.mp3",data-src="music/music4.mp3">
+                    <div class="song-info">
+                        <span class="song-name">Nhạc Chill</span>
+                        <span class="artist">Mix giũa các bài hát</span>
+                    </div>
+                    <div class="controls">
+                        <i class="fas fa-play play-btn"></i>
+                        <i class="fas fa-pause pause-btn hidden"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="content">
+        <div class="card">
+            <div class="card-header">
+                <div class="profile-img">
+                    <img src="https://files.catbox.moe/q8rp5f.gif" alt="NgHuy">
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <h2 class="name">
+                    Ng Huy
+                    <span class="verified-badge">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </h2>
+
+                <div class="status">
+                    <span class="status-dot"></span>
+                    Online
+                    <span class="ping-indicator">
+                        <i class="fas fa-signal"></i>
+                        <span class="ping-value">--ms</span>
+                    </span>
+                </div>
+                
+                <div class="music-bars">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                
+                <h3 class="role" data-text="Web Developer">Web Developer</h3>
+
+                <div class="bio">
+                    <p>Nguyễn Đình Huy | 20**</p>
+                </div>
+
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    HaiPhong, Vietnam
+                </div>
+
+                <div class="tech-stack">
+                    <i class="fab fa-html5" data-tooltip="HTML5"></i>
+                    <i class="fab fa-css3-alt" data-tooltip="CSS3"></i>
+                    <i class="fab fa-js" data-tooltip="JavaScript"></i>
+                    <i class="fab fa-react" data-tooltip="React"></i>
+                    <i class="fab fa-php" data-tooltip="PHP"></i>
+                </div>
+
+                <div class="social">
+                    <a href="https://github.com/nghuy9" class="social-link" data-tooltip="Github"><i class="fab fa-github"></i></a>
+                    <a href="https://www.tiktok.com/@nghuy1117770" class="social-link" data-tooltip="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/huydzs1tg257" class="social-link" data-tooltip="Facebook"><i class="fab fa-facebook"></i></a>
+                </div>
+
+                <a href="https://zalo.me/0855026965" target="_blank" class="connect-btn">Contact</a>
+            </div>
+        </div>
+    </main>
+
+    <div class="stars"></div>
+    <div class="nebula"></div>
+
+    <!-- Thêm script để tạo sao -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const starsContainer = document.querySelector('.stars');
+        
+        // Tạo các ngôi sao
+        for(let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            
+            // Random vị trí và kích thước
+            const size = Math.random() * 3;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (Math.random() * 3 + 1) + 's');
+            
+            starsContainer.appendChild(star);
+        }
+        
+        // Tạo sao băng
+        setInterval(() => {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.top = Math.random() * 100 + '%';
+            shootingStar.style.setProperty('--duration', '1s');
+            shootingStar.style.setProperty('--rotation', Math.random() * 45 + 'deg');
+            
+            starsContainer.appendChild(shootingStar);
+            
+            // Xóa sao băng sau khi animation kết thúc
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 1000);
+        }, 2000);
+    });
+    </script>
+
+    <script defer src="script.js"></script>
+</body>
+</html>
