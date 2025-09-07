@@ -6,7 +6,7 @@
     <title>NgHuy - Profile</title>
     <meta name="description" content="NgHuy - Web Developer Portfolio | Creative & Professional Web Solutions">
     <meta name="keywords" content="web developer, portfolio, NgHuy, frontend, developer">
-    <meta name="author" content="Quoc Duy">
+    <meta name="author" content="Ng Huy">
     
     <meta property="og:title" content="NgHuy - Web Developer">
     <meta property="og:description" content="Creative & Professional Web Solutions">
@@ -677,7 +677,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="profile-img">
-                    <img src="https://i.imgur.com/dRn4Wg0.jpeg" alt="NgHuy">
+                    <img src="http://dkupload.site/uploads/files-1757242946196-506333164.jpeg" alt="Ng Huy">
                 </div>
             </div>
             
@@ -725,9 +725,10 @@
                 </div>
 
                 <div class="social">
-                    <a href="https://github.com/nghuy257" class="social-link" data-tooltip="Github"><i class="fab fa-github"></i></a>
+                    <a href="https://github.com/nghuy9" class="social-link" data-tooltip="Github"><i class="fab fa-github"></i></a>
+                    <a href="http://45.131.65.38:6169/" class="social-link" data-tooltip="API GHI CHÚ" target="_blank"><i class="fas fa-tools"></i></a>
                     <a href="https://www.tiktok.com/@nghuy1117770" class="social-link" data-tooltip="TikTok"><i class="fab fa-tiktok"></i></a>
-                    <a href="https://www.facebook.com/profile.php?id=61575034471403" class="social-link" data-tooltip="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.facebook.com/huydzs1tg257" class="social-link" data-tooltip="Facebook"><i class="fab fa-facebook"></i></a>
                 </div>
 
                 <a href="https://zalo.me/0855026965" target="_blank" class="connect-btn">Contact</a>
@@ -737,45 +738,6 @@
 
     <div class="stars"></div>
     <div class="nebula"></div>
-
-    <!-- Thêm script để tạo sao -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const starsContainer = document.querySelector('.stars');
-        
-        // Tạo các ngôi sao
-        for(let i = 0; i < 200; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            
-            // Random vị trí và kích thước
-            const size = Math.random() * 3;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.setProperty('--duration', (Math.random() * 3 + 1) + 's');
-            
-            starsContainer.appendChild(star);
-        }
-        
-        // Tạo sao băng
-        setInterval(() => {
-            const shootingStar = document.createElement('div');
-            shootingStar.className = 'shooting-star';
-            shootingStar.style.top = Math.random() * 100 + '%';
-            shootingStar.style.setProperty('--duration', '1s');
-            shootingStar.style.setProperty('--rotation', Math.random() * 45 + 'deg');
-            
-            starsContainer.appendChild(shootingStar);
-            
-            // Xóa sao băng sau khi animation kết thúc
-            setTimeout(() => {
-                shootingStar.remove();
-            }, 1000);
-        }, 2000);
-    });
-    </script>
 
     <script defer src="script.js"></script>
 </body>
