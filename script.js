@@ -33,6 +33,38 @@ document.addEventListener('click', function(e) {
     }
 });
 
+// Hiệu ứng sao lấp lánh và sao băng
+document.addEventListener('DOMContentLoaded', function() {
+    const starsContainer = document.querySelector('.stars');
+    if (!starsContainer) return;
+    // Tạo các ngôi sao
+    for(let i = 0; i < 200; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 3;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.setProperty('--duration', (Math.random() * 3 + 1) + 's');
+        // Thêm dòng này để mỗi sao có animation-delay khác nhau
+        star.style.animationDelay = (Math.random() * 3) + 's';
+        starsContainer.appendChild(star);
+    }
+    // Tạo sao băng
+    setInterval(() => {
+        const shootingStar = document.createElement('div');
+        shootingStar.className = 'shooting-star';
+        shootingStar.style.top = Math.random() * 100 + '%';
+        shootingStar.style.setProperty('--duration', '1s');
+        shootingStar.style.setProperty('--rotation', Math.random() * 45 + 'deg');
+        starsContainer.appendChild(shootingStar);
+        setTimeout(() => {
+            shootingStar.remove();
+        }, 1000);
+    }, 2000);
+});
+
 // Constants
 const DOM = {
     loader: document.getElementById('loader'),
